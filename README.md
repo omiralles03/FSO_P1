@@ -30,11 +30,11 @@ Executa l'script amb dos directoris d'exemple.
 Per tal de facilitar el joc de proves en els laboratoris, feu un script que crei el joc de proves inicial que consistirà en:
 
 - [ ] Crea dos directoris amb:
-  - Alguns fitxers iguals.
-  - Alguns fitxers diferents.
-  - Algun subdirectori.
-  - Afegeix fitxers en el subdirectori, tan iguals com diferents
-- Observa la sortida per comprovar què fa l'script.
+  - [ ] Alguns fitxers iguals.
+  - [ ] Alguns fitxers diferents.
+  - [ ] Algun subdirectori.
+  - [ ] Afegeix fitxers en el subdirectori, tan iguals com diferents
+- [ ] Observa la sortida per comprovar què fa l'script.
 
 > [!NOTE]
 > Nota: per tal de crear el contingut dels fitxers, podem usar comandes linux amb redireccions de sortida.
