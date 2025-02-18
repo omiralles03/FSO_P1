@@ -1,3 +1,6 @@
 # Ignorar directoris de prova
 dir1/
 dir2/
+
+# Ignorar document word
+.docx
