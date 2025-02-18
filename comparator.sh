@@ -32,3 +32,4 @@ for file in $(ls "$DIR1"); do
         fi
     fi
 done
+echo -e "\n"
