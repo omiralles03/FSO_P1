@@ -14,7 +14,9 @@ Per facilitar aquesta tasca, hauràs de treballar amb un script que ja fa part d
 
 Usant les comandes explicades en els laboratoris, implementeu les següents tasques:
 
-## Part 1: Execució de l'script inicial
+---
+
+# Part 1: Execució de l'script inicial
 Se t'ha proporcionat un script bàsic que compara dos directoris. Aquest script:
 - Llista els fitxers presents en un directori però no en l'altre.
 - Detecta fitxers amb el mateix nom que tenen contingut diferent.
@@ -39,17 +41,19 @@ Per tal de facilitar el joc de proves en els laboratoris, feu un script que crei
 > [!NOTE]
 > Nota: per tal de crear el contingut dels fitxers, podem usar comandes linux amb redireccions de sortida.
 
-## Part 2: Ampliació de funcionalitats
+---
+
+# Part 2: Ampliació de funcionalitats
 Hauràs de modificar l'script inicial per afegir les següents funcionalitats:
 
-### 1. Comparació recursiva
+## 1. Comparació recursiva
 L'script ha de buscar també en els subdirectoris dels directoris donats per
 paràmetre.
 
 > [!TIP]
 Utilitza `find` per obtenir la llista de fitxers amb rutes completes.
 
-### 2. Comparació avançada de fitxers
+## 2. Comparació avançada de fitxers
 Mostra el contingut de les línies diferents entre dos fitxers amb el mateix nom.
 
 Ignora les línies o caràcters en blanc.
@@ -63,23 +67,25 @@ Afegeix paràmetres per línia de comandes per configurar aquests criteris.
 
 Afegeix la comanda getopts, ja que tindrem diverses opcions possibles.
 
-### 3. Ignorar certs fitxers
+## 3. Ignorar certs fitxers
 Afegeix opcions per ignorar en la comparativa fitxers basant-te en diferents criteris:
 
 - Ignora els fitxers amb unes extensions concretes introduïdes per paràmetre i separades per `,` (per exemple,`.tmp`,`.bak`).
 - Ignora tota la branca d'un subdirectori concret introduit per paràmetre.
 - Afegeix els paràmetres per línia de comandes per configurar aquests criteris.
 
-### 4. Comprovació de permisos
+## 4. Comprovació de permisos
 L'script ha de verificar si els permisos dels fitxers són iguals entre els fitxers amb el mateix nom i mostrar-ne els detalls si són diferents.
 
 Afegeix paràmetres per línia de comandes per configurar aquests criteris.
 
-### 5. Registre en un fitxer
+## 5. Registre en un fitxer
 Escriu els resultats de l’script en un fitxer de registre en lloc de mostrar-los per pantalla.
 Afegeix l'opció `-o <nom_fitxer>` per especificar el fitxer de sortida
 
-## Lliurament
+---
+
+# Lliurament
 - L'script modificat, amb comentaris necessaris per entendre el codi.
 - Fitxer `.tgz` que inclogui els dos directoris on s'han realitzat les proves.
 - Una documentació en pdf que inclogui:
@@ -88,3 +94,9 @@ Afegeix l'opció `-o <nom_fitxer>` per especificar el fitxer de sortida
   - Instruccions per executar l'script. Fent èmfasis en les diferents opcions dissenyades.
 - El resultat del teu joc de proves executat
 - Resultat del teu joc de proves executat
+
+---
+
+# Qualificacions
+
+---
