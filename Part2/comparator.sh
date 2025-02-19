@@ -29,7 +29,7 @@ fi
 #   -2: Suppress lines unique to file2.
 #   -3: Suppress lines common to both files.
 #   find -type f: nomes fitxers
-#   
+#   find -printf "%P\n": nomes el path relatiu
 echo "Fitxers només a $DIR1:"
 comm -23 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort)
 echo "Fitxers només a $DIR2:"
