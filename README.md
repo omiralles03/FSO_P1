@@ -26,12 +26,11 @@ Descarrega i analitza l'script proporcionat.
 
 - [x] Revisa el codi per entendre com funciona.
 - [x] Afegeix comentaris al codi per descriure cada part.
-
-Executa l'script amb dos directoris d'exemple.
+- [x] Executa l'script amb dos directoris d'exemple.
 
 Per tal de facilitar el joc de proves en els laboratoris, feu un script que crei el joc de proves inicial que consistirà en:
 
-- [x] Crea dos directoris amb:
+- Crea dos directoris amb:
   - [x] Alguns fitxers iguals.
   - [x] Alguns fitxers diferents.
   - [x] Algun subdirectori.
@@ -47,41 +46,40 @@ Per tal de facilitar el joc de proves en els laboratoris, feu un script que crei
 Hauràs de modificar l'script inicial per afegir les següents funcionalitats:
 
 ## 1. Comparació recursiva
-L'script ha de buscar també en els subdirectoris dels directoris donats per
-paràmetre.
+- [x] L'script ha de buscar també en els subdirectoris dels directoris donats per paràmetre.
 
 > [!TIP]
 Utilitza `find` per obtenir la llista de fitxers amb rutes completes.
 
 ## 2. Comparació avançada de fitxers
-Mostra el contingut de les línies diferents entre dos fitxers amb el mateix nom.
+- [ ] Mostra el contingut de les línies diferents entre dos fitxers amb el mateix nom.
 
-Ignora les línies o caràcters en blanc.
+- [ ] Ignora les línies o caràcters en blanc.
 
-Afegeix una funció que retorni el nom absolut dels fitxers on el contingut tingui una similitud del 90%. Realitza aquesta cerca entre tots els fitxers dels dos directoris.
+- [ ] Afegeix una funció que retorni el nom absolut dels fitxers on el contingut tingui una similitud del 90%. Realitza aquesta cerca entre tots els fitxers dels dos directoris.
 
 > [!TIP]
 > Pots utilitzar la comanda `diff`
 
-Afegeix paràmetres per línia de comandes per configurar aquests criteris.
+- [ ] Afegeix paràmetres per línia de comandes per configurar aquests criteris.
 
-Afegeix la comanda getopts, ja que tindrem diverses opcions possibles.
+- [ ] Afegeix la comanda `getopts`, ja que tindrem diverses opcions possibles.
 
 ## 3. Ignorar certs fitxers
 Afegeix opcions per ignorar en la comparativa fitxers basant-te en diferents criteris:
 
-- Ignora els fitxers amb unes extensions concretes introduïdes per paràmetre i separades per `,` (per exemple,`.tmp`,`.bak`).
-- Ignora tota la branca d'un subdirectori concret introduit per paràmetre.
-- Afegeix els paràmetres per línia de comandes per configurar aquests criteris.
+- - [ ] Ignora els fitxers amb unes extensions concretes introduïdes per paràmetre i separades per `,` (per exemple,`.tmp`,`.bak`).
+- - [ ] Ignora tota la branca d'un subdirectori concret introduit per paràmetre.
+- - [ ] Afegeix els paràmetres per línia de comandes per configurar aquests criteris.
 
 ## 4. Comprovació de permisos
-L'script ha de verificar si els permisos dels fitxers són iguals entre els fitxers amb el mateix nom i mostrar-ne els detalls si són diferents.
+- [ ] L'script ha de verificar si els permisos dels fitxers són iguals entre els fitxers amb el mateix nom i mostrar-ne els detalls si són diferents.
 
-Afegeix paràmetres per línia de comandes per configurar aquests criteris.
+- [ ] Afegeix paràmetres per línia de comandes per configurar aquests criteris.
 
 ## 5. Registre en un fitxer
-Escriu els resultats de l’script en un fitxer de registre en lloc de mostrar-los per pantalla.
-Afegeix l'opció `-o <nom_fitxer>` per especificar el fitxer de sortida
+- [ ] Escriu els resultats de l’script en un fitxer de registre en lloc de mostrar-los per pantalla.
+- [ ] Afegeix l'opció `-o <nom_fitxer>` per especificar el fitxer de sortida
 
 ---
 
