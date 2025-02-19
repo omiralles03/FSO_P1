@@ -28,10 +28,12 @@ fi
 #   -1: Suppress lines unique to file1.
 #   -2: Suppress lines unique to file2.
 #   -3: Suppress lines common to both files.
+#   find -type f: nomes fitxers
+#   
 echo "Fitxers només a $DIR1:"
-comm -23 <(ls "$DIR1" | sort) <(ls "$DIR2" | sort)
+comm -23 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort)
 echo "Fitxers només a $DIR2:"
-comm -13 <(ls "$DIR1" | sort) <(ls "$DIR2" | sort)
+comm -13 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort)
 
 # Nomes mostra els fitxers amb el mateix nom
 # i diferent contingut de DIR
