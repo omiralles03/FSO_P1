@@ -52,11 +52,11 @@ Hauràs de modificar l'script inicial per afegir les següents funcionalitats:
 Utilitza `find` per obtenir la llista de fitxers amb rutes completes.
 
 ## 2. Comparació avançada de fitxers
-- [ ] Mostra el contingut de les línies diferents entre dos fitxers amb el mateix nom.
+- [x] Mostra el contingut de les línies diferents entre dos fitxers amb el mateix nom.
 
-- [ ] Ignora les línies o caràcters en blanc.
+- [x] Ignora les línies o caràcters en blanc.
 
-- [ ] Afegeix una funció que retorni el nom absolut dels fitxers on el contingut tingui una similitud del 90%. Realitza aquesta cerca entre tots els fitxers dels dos directoris.
+- [x] Afegeix una funció que retorni el nom absolut dels fitxers on el contingut tingui una similitud del 90%. Realitza aquesta cerca entre tots els fitxers dels dos directoris.
 
 > [!TIP]
 > Pots utilitzar la comanda `diff`
