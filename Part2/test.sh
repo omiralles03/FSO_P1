@@ -26,10 +26,16 @@ echo $(ls -d */)
 # -------------------
 # Fitxers
 # -------------------
-
+echo -e "\nCreant fitxers de proves..."
 # Unics
 echo "Only in dir1" > dir1/file1.txt
 echo "Only in dir2" > dir2/file2.txt
+echo "Log for dir1" > dir1/log1.log
+echo "Log for dir2" > dir2/log2.log
+echo "Backup for dir1" > dir1/backup1.bak
+echo "Temp for dir2" > dir2/temporal2.tmp
+echo "Vim config" > dir1/vim.conf
+echo "Lua content" > dir2/init.lua
 
 # Iguals
 echo "Equal file" > dir1/equal.txt
@@ -39,37 +45,172 @@ echo "Equal file" > dir2/equal.txt
 echo "Different in dir1" > dir1/diff.txt
 echo "Different in dir2" > dir2/diff.txt
 
+echo "Fitxers creats."
 # -------------------
 # Subdirectoris
 # -------------------
+echo -e "\nCreant subdirectoris de proves..."
+
 mkdir dir1/subdir
 mkdir dir2/subdir
 
 # Fitxers unics en dir1/subdir
-echo "Unique in subdir1" > dir1/subdir/subfile1.txt
-echo "Unique in subdir2" > dir1/subdir/subfile2.txt
+echo "Unique in subdir1" > dir1/subdir/sub1.txt
+echo "Unique in subdir2" > dir2/subdir/sub2.txt
 
 # Fitxers iguals en els dos subdirs
-echo "Equal in subdir" > dir1/subdir/subfile3.txt
-echo "Equal in subdir" > dir2/subdir/subfile3.txt
+echo "Equal in subdir" > dir1/subdir/sub_equal.txt
+echo "Equal in subdir" > dir2/subdir/sub_equal.txt
 
-# Fitxers diferents en dir1/subdir
-echo "Different1 in subdir1" > dir1/subdir/subfile4.txt
-echo "Different2 in subdir1" > dir1/subdir/subfile4.txt
+# Fitxers diferents
+echo "Line 1" > dir1/subdir/sub_diff.txt
+echo "Line 1" >> dir2/subdir/sub_diff.txt
+echo "Line 2 - canvi" >> dir1/subdir/sub_diff.txt
 
-# Fitxer unic en dir2/sudir
-echo "Only in subdir2" > dir2/subdir/subfile5.txt
+echo "Line 1" > dir2/subdir/sub_diff.txt
+echo "Line 1" >> dir2/subdir/sub_diff.txt
+echo "Line 2 - modified" >> dir2/subdir/sub_diff.txt
 
+echo "Subdirectoris i subfitxers creats."
 
+# -------------------
+# Fitxers amb moltes linies per comparar
+# -------------------
+echo -e "\nCreant fitxers per comparar..."
+
+for i in {1..1000}; do
+    echo "Line $i content" >> dir1/long.txt
+    echo "Line $i content" >> dir2/long.txt
+done
+for i in {1..10}; do
+    j=$((1+RANDOM%1000))
+    sed -i "$j s/.*/Line $j modified/" dir1/long.txt
+done
+echo "Fitxers per comparar creats."
+# -------------------
+# Fitxers amb diferents permisos
+# -------------------
+echo -e "\nCreant fitxers amb diferents permisos..."
+
+echo "Different permissions 1" > dir1/perm.py
+echo "Different permissions 2" > dir2/perm.py
+chmod 777 dir1/perm.py
+chmod 755 dir2/perm.py
+echo "Different permissions 1" > dir1/perm2.js
+echo "Different permissions 2" > dir2/perm2.js
+chmod 644 dir1/perm2.js
+chmod 654 dir2/perm2.js
+echo "Different permissions 1" > dir1/perm3.osr
+echo "Different permissions 2" > dir2/perm3.osr
+chmod 777 dir1/perm3.osr
+chmod 733 dir2/perm3.osr
+
+echo "Fitxers amb diferents permisos creats."
+# -------------------
+# Fitxers amb diferents extensions
+# -------------------
+echo -e "\nCreant fitxers amb diferents extensions..."
+
+echo "Shell script" > dir1/shell.sh
+echo "Shell script" > dir2/shell.sh
+echo "Copy script" > dir1/copy.bak
+echo "Copy script" > dir2/copy.bak
+echo "Temporal file1" > dir1/temp.tmp
+echo "Temporal file2" > dir2/temp.tmp
+echo "{ 'version' : '1.0.0' }" > dir1/package.json
+echo "{ 'version' : '1.3.1' }" > dir2/package.json
+echo "apiKey: '1234567890'
+secretKey: '123123123'" > dir1/.env
+echo "apiKey: '0987654321'
+secretKey: '123123123'" > dir2/.env
+
+echo "Fitxers amb diferents extensions creats."
+# -------------------
+# Fitxers d'un directory a ignorar
+# -------------------
+echo -e "\nCreant fitxers d'un subdirectori a ignorar..."
+
+mkdir dir1/ignore && mkdir dir2/ignore
+echo "margin: 4px;
+padding: 2px 4px;
+border: none;
+color: white;" > dir1/ignore/styles.css
+echo "margin: 0px;
+padding: 2px 4px;
+border: bold;
+color: red;" > dir2/ignore/styles.css
+
+echo "Fitxers d'un subdirectori a ignorar creats."
+# -------------------
 # Executar comparator.sh
-echo -e "\nExecucio comparator.sh\n"
+# -------------------
+echo -e "\nExecutant comparator.sh amb diferents opcions..."
+while true; do
+    echo ""
+    echo "-------------------------------------"
+    echo "-------------------------------------"
+    echo "Selecciona el cas de prova:"
+    echo "    [0] Sense parametres" 
+    echo "    [1] Amb parametres incorrectes (directori inexistent)"
+    echo "    [2] Amb parametres correctes (dir1 i dir2)"
+    echo "    [3] Amb flag -c (mostrant comparacio de linies)"
+    echo "    [4] Amb flag -f (ignorant .bak i .txt)"
+    echo "    [5] Amb flag -d (ignorant dirX/ignore)"
+    echo "    [6] Amb flag -p (mostrant permisos)"
+    echo "    [7] Amb flag -o (guardant sortida a output.txt)"
+    echo "    [8] Amb tots els flags (-f, -d, -p, -o)"
+    echo "    [9] Sortir"
+    echo "-------------------------------------"
+    echo "-------------------------------------"
+    echo ""
 
-./comparator.sh dir1 dir2
+    read -p "Tria una opcio [0-9]: " option
 
-# Esborrar directoris de proves
-# echo -e "\nEsborrar directoris de proves"
-# rm -r dir1 && rm -r dir2
-# echo $(ls -d */)
+    case $option in
+        0)
+            echo -e "\nSense parametres"
+            ./comparator.sh
+            ;;
+        1)
+            echo -e "\nAmb parametres incorrectes"
+            ./comparator.sh dir1 inexistent
+            ;;
+        2)
+            echo -e "\nAmb parametres correctes"
+            ./comparator.sh dir1 dir2
+            ;;
+        3)
+            echo -e "\nAmb flag -c (mostrant comparacio de linies)"
+            ./comparator.sh -c dir1 dir2
+            ;;
+        4)
+            echo -e "\nAmb flag -f (ignorant .bak i .txt)"
+            ./comparator.sh -f .bak,.txt dir1 dir2
+            ;;
+        5)
+            echo -e "\nAmb flag -d (ignorant dirX/ignore)"
+            ./comparator.sh -d ignore dir1 dir2
+            ;;
+        6)
+            echo -e "\nAmb flag -p (mostrant permisos)"
+            ./comparator.sh -p dir1 dir2
+            ;;
+        7)
+            echo -e "\nAmb flag -o (guardant sortida a output.log)"
+            ./comparator.sh -o output.log dir1 dir2
+            ;;
+        8)
+            echo -e "\nAmb tots els flags (-c, -f, -d, -p, -o)"
+            ./comparator.sh -c -f .bak,.txt -d ignore -p -o output.log dir1 dir2
+            ;;
+        9)
+            break
+            ;;
+        *)
+            echo "Opcio incorrecta, torna a provar"
+            ;;
+    esac
+done
 
 echo "*/---------------------------------\*"
 echo "        JOC DE PROVES FINALITZAT     "
