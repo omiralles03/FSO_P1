@@ -4,12 +4,20 @@
 # PART 2: Ampliació de funcionalitats
 # -------------------------------------
 
+# Default values
 DEBUG=false
+show_compare=false
+ignore_file=""
+ignore_dir=""
 check_perms=false
-
+output_file=""
+editor="cat"
 # Parse getopt arguments
-while getopts "f:d:po:" opt; do 
+while getopts "cf:d:po:" opt; do 
     case "$opt" in 
+        c)
+            show_compare=true
+            ;;
         f)
             ignore_file="$OPTARG"
             ;;
@@ -31,7 +39,7 @@ done
 shift $((OPTIND-1)) # Remove opts args to access positional args
 
 # Redirect output to a file
-if [ -n "output_file" ]; then
+if [ -n "$output_file" ]; then
     exec > "$output_file" 2>&1
 fi
 
@@ -64,8 +72,6 @@ advanced_comparison() {
     local file1="$1"
     local file2="$2"
 
-    echo -e "   $file1 <--> $file2\n"
-
     # Get the diff between the two files
         # -B: Ignore blank lines
         # -w: Ignore white space when comparing lines
@@ -95,26 +101,30 @@ advanced_comparison() {
         similarity=100 # For empty files
     fi
 
-    echo -e "   Els fitxers tenen un $similarity% de similitud.\n"
+    echo -e "      : Els fitxers tenen un $similarity% de similitud.\n"
     if [ "$similarity" -ge 90 ]; then
         # Print the absolute path of the files
-        echo "   > $(realpath -e "$file1")"
-        echo "   > $(realpath -e "$file2")"
-        echo -e "\n   Diferencies:\n"
-        echo "$diffed"
+        echo "      > $(realpath -e "$file1")"
+        echo "      > $(realpath -e "$file2")"
     fi
 
+    if $show_compare; then
+        echo -e "\n   Linies diferents:\n"
+        echo "$diffed"
+    fi
     # Check the permissions of the files
     if $check_perms; then
         local perms1=$(stat -c "%a" "$file1")
         local perms2=$(stat -c "%a" "$file2")
         if [ "$perms1" != "$perms2" ]; then
-            echo -e "\n   Els permisos son diferents:"
-            echo "      > $(realpath -e "$file1"): $perms1"
-            echo "      > $(realpath -e "$file2"): $perms2"
+            echo -e "\n      - Els permisos son diferents:"
+            echo "         > $(realpath -e "$file1")"
+            echo "            : $perms1 = $(stat -c "%A" "$file1")"
+            echo "         > $(realpath -e "$file2"): $perms2"
+            echo "            : $perms2 = $(stat -c "%A" "$file2")"
         else
-            echo -e "\n   Els permisos son iguals:"
-            echo "      > $perms1"
+            echo -e "\n      - Els permisos son iguals:"
+            echo "         > $perms1 = $(stat -c "%A" "$file1")"
         fi
     fi
 
@@ -130,7 +140,7 @@ advanced_comparison() {
     fi
 }
 
-echo -e "\nComparacio avancada de fitxers ignorant {$ignore_file} & {$ignore_dir}\n"
+echo -e "\nComparacio avancada de fitxers ignorant {$ignore_file}\n"
 
 # 3. Ignore certain files
 # Convert the file extension string into an array
@@ -161,15 +171,17 @@ find "$DIR1" -type f -printf "%P\n" | while IFS= read -r relpath; do
         fi
         # Compare the files if they are not skipped
         if ! $skip; then 
+            echo ""
+            echo -e "   Comparant: $DIR1/$relpath <--> $DIR2/$relpath\n"
             if ! diff -q "$DIR1/$relpath" "$DIR2/$relpath" >/dev/null; then
+                advanced_comparison "$DIR1/$relpath" "$DIR2/$relpath"
                 if $DEBUG; then 
-                    advanced_comparison "d1/countries.txt" "d2/countries.txt" 
                     echo "skip: $skip" 
                     echo "compared: $isCompared"
-                else
-                    advanced_comparison "$DIR1/$relpath" "$DIR2/$relpath"
                 fi
                 isCompared=true
+            else
+                echo "      ! Els fitxers $relpath són iguals."
             fi
         fi
     fi
@@ -191,10 +203,7 @@ if [ -n "$output_file" ]; then
             2) editor="nvim";;
             3) editor="nano";;
             4) editor="cat";;
-            *) 
-                echo "Opció no vàlida. S'obrirà amb cat." > /dev/tty
-                editor="cat"
-                ;;
+            *) echo "Opció no vàlida. S'obrirà amb cat." > /dev/tty;;
         esac
         echo "Obrint amb $editor..." > /dev/tty
         $editor $output_file > /dev/tty
