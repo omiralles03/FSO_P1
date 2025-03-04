@@ -61,25 +61,25 @@ Utilitza `find` per obtenir la llista de fitxers amb rutes completes.
 > [!TIP]
 > Pots utilitzar la comanda `diff`
 
-- [ ] Afegeix paràmetres per línia de comandes per configurar aquests criteris.
+- [x] Afegeix paràmetres per línia de comandes per configurar aquests criteris.
 
-- [ ] Afegeix la comanda `getopts`, ja que tindrem diverses opcions possibles.
+- [x] Afegeix la comanda `getopts`, ja que tindrem diverses opcions possibles.
 
 ## 3. Ignorar certs fitxers
 Afegeix opcions per ignorar en la comparativa fitxers basant-te en diferents criteris:
 
-- - [ ] Ignora els fitxers amb unes extensions concretes introduïdes per paràmetre i separades per `,` (per exemple,`.tmp`,`.bak`).
-- - [ ] Ignora tota la branca d'un subdirectori concret introduit per paràmetre.
-- - [ ] Afegeix els paràmetres per línia de comandes per configurar aquests criteris.
+- - [x] Ignora els fitxers amb unes extensions concretes introduïdes per paràmetre i separades per `,` (per exemple,`.tmp`,`.bak`).
+- - [x] Ignora tota la branca d'un subdirectori concret introduit per paràmetre.
+- - [x] Afegeix els paràmetres per línia de comandes per configurar aquests criteris.
 
 ## 4. Comprovació de permisos
-- [ ] L'script ha de verificar si els permisos dels fitxers són iguals entre els fitxers amb el mateix nom i mostrar-ne els detalls si són diferents.
+- [x] L'script ha de verificar si els permisos dels fitxers són iguals entre els fitxers amb el mateix nom i mostrar-ne els detalls si són diferents.
 
-- [ ] Afegeix paràmetres per línia de comandes per configurar aquests criteris.
+- [x] Afegeix paràmetres per línia de comandes per configurar aquests criteris.
 
 ## 5. Registre en un fitxer
-- [ ] Escriu els resultats de l’script en un fitxer de registre en lloc de mostrar-los per pantalla.
-- [ ] Afegeix l'opció `-o <nom_fitxer>` per especificar el fitxer de sortida
+- [x] Escriu els resultats de l’script en un fitxer de registre en lloc de mostrar-los per pantalla.
+- [x] Afegeix l'opció `-o <nom_fitxer>` per especificar el fitxer de sortida
 
 ---
 
