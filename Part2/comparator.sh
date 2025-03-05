@@ -7,16 +7,24 @@
 # Default values
 DEBUG=false
 show_compare=false
+ignore_spaces=false
+sim=false
 ignore_file=""
 ignore_dir=""
 check_perms=false
 output_file=""
 editor="cat"
 # Parse getopt arguments
-while getopts "cf:d:po:" opt; do 
+while getopts "cisf:d:po:" opt; do 
     case "$opt" in 
         c)
             show_compare=true
+            ;;
+        i)
+            ignore_spaces=true
+            ;;
+        s)
+            sim=true
             ;;
         f)
             ignore_file="$OPTARG"
@@ -76,38 +84,44 @@ advanced_comparison() {
         # -B: Ignore blank lines
         # -w: Ignore white space when comparing lines
         # -u: Unified output format
-    local diffed=$(diff -B -w -u "$file1" "$file2")
-
-    # Get non-empty lines in each file
-        # -c: Count the number of lines
-        # -v: Invert the sense of comparisons (only selects lines that are different)
-        # -e: Regular expression (start of line, any number of spaces, end of line)
-    local total1=$(grep -cve '^[[:space:]]*$' "$file1")
-    local total2=$(grep -cve '^[[:space:]]*$' "$file2")
-    local total_lines=$(( total1 > total2 ? total1 : total2 ))
-
-    # Count lines that are different
-        # Get all lines that start with + or - (added or removed lines)
-        # Remove lines that start with --- or +++ (file names)
-    local diff_lines=$(echo "$diffed" | grep -E '^[+-]' | grep -vE '^(---|\+\+\+)' | wc -l)
-    diff_lines=$(( (diff_lines % 2) > 0 ? diff_lines / 2 + 1 : diff_lines / 2 ))
-
-    # Return the absolute name of files with over 90% similarity
-    local similarity
-
-    if [ "$total_lines" -gt 0 ]; then
-        similarity=$((100 - (diff_lines * 100 / total_lines))) 
+    if $ignore_spaces; then
+        local diffed=$(diff -u "$file1" "$file2")
     else
-        similarity=100 # For empty files
+        local diffed=$(diff -B -w -u "$file1" "$file2")
     fi
 
-    echo -e "      : Els fitxers tenen un $similarity% de similitud.\n"
-    if [ "$similarity" -ge 90 ]; then
-        # Print the absolute path of the files
-        echo "      > $(realpath -e "$file1")"
-        echo "      > $(realpath -e "$file2")"
+    if $sim; then
+        # Get non-empty lines in each file
+            # -c: Count the number of lines
+            # -v: Invert the sense of comparisons (only selects lines that are different)
+            # -e: Regular expression (start of line, any number of spaces, end of line)
+        local total1=$(grep -cve '^[[:space:]]*$' "$file1")
+        local total2=$(grep -cve '^[[:space:]]*$' "$file2")
+        local total_lines=$(( total1 > total2 ? total1 : total2 ))
+    
+        # Count lines that are different
+            # Get all lines that start with + or - (added or removed lines)
+            # Remove lines that start with --- or +++ (file names)
+        local diff_lines=$(echo "$diffed" | grep -E '^[+-]' | grep -vE '^(---|\+\+\+)' | wc -l)
+        diff_lines=$(( (diff_lines % 2) > 0 ? diff_lines / 2 + 1 : diff_lines / 2 ))
+    
+        # Return the absolute name of files with over 90% similarity
+        local similarity
+    
+        if [ "$total_lines" -gt 0 ]; then
+            similarity=$((100 - (diff_lines * 100 / total_lines))) 
+        else
+            similarity=100 # For empty files
+        fi
+    
+        
+        echo -e "      : Els fitxers tenen un $similarity% de similitud.\n"
+        if [ "$similarity" -ge 90 ]; then
+            # Print the absolute path of the files
+            echo "      > $(realpath -e "$file1")"
+            echo "      > $(realpath -e "$file2")"
+        fi
     fi
-
     if $show_compare; then
         echo -e "\n   Linies diferents:\n"
         echo "$diffed"
