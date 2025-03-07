@@ -4,12 +4,39 @@
 # PART 2: Ampliació de funcionalitats
 # -------------------------------------
 
+# Color values
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+YELLOW='\033[0;33m'
+
+# Underlined color values
+URED='\033[4;31m'
+UGREEN='\033[4;32m'
+UBLUE='\033[4;34m'
+UMAGENTA='\033[4;35m'
+UCYAN='\033[4;36m'
+UYELLOW='\033[4;33m'
+
+# No color
+NC='\033[0m'
+
+# Custom icons with colors
+INFO="${BLUE}ⓘ ${NC}"         # Displays results
+ARROW="${CYAN}➜ ${NC}"        # Entry of a directory
+IDK="${YELLOW}≈ ${UYELLOW}"   # Indicates similarity
+NOTE="${MAGENTA}➥${NC}"       # Entry of a list
+CMP="${NC}<==>${NC}"          # Comparison
+WARN="${RED}✗ ${URED}"        # Failure / Warning
+OK="${GREEN}✓ ${UGREEN}"      # Success 
+
 # Default values
 show_compare=false
 ignore_whites=false
 sim=false
-extensions=()
-#ignore_file=""
+ignore_file=""
 ignore_dir=""
 check_perms=false
 output_file=""
@@ -37,6 +64,10 @@ while getopts "cwsf:d:po:" opt; do
             check_perms=true
             ;;
         o)
+            # Disable colors to avoid file having color codes
+            RED="" GREEN="" BLUE="" MAGENTA="" CYAN="" YELLOW="" NC=""
+            URED="" UGREEN="" UBLUE="" UMAGENTA="" UCYAN="" UYELLOW=""
+            INFO="ⓘ " ARROW="➜ " IDK="≈ " NOTE="➥" CMP="<==>" WARN="✗ " OK="✓ "
             # Redirect output to the specified file
             output_file="$OPTARG"
             exec > "$output_file" 2>&1
@@ -62,20 +93,19 @@ if [ ! -d "$DIR1" ] || [ ! -d "$DIR2" ]; then
     exit 1
 fi
 
-echo "-------------------------------------"
-echo "      RESULTATS DE LA COMPARACIO     "
-echo "-------------------------------------"
+echo -e "${BLUE}-------------------------------------"
+echo -e "      RESULTATS DE LA COMPARACIO     "
+echo -e "-------------------------------------${NC}"
 echo ""
 # 1. Recursive comparison
 # FLAGS:
 #   -1: Suppress lines unique to file1.
 #   -2: Suppress lines unique to file2.
 #   -3: Suppress lines common to both files.
-echo -e "Fitxers només a $DIR1:\n"
-comm -23 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort) | sed "s|^|\t> |"
-
-echo -e "\nFitxers només a $DIR2:\n"
-comm -13 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort) | sed "s|^|\t> |"
+echo -e "Fitxers només a ${CYAN}$DIR1${NC}:\n"
+comm -23 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort) | sed "s|^|\t`printf "${ARROW}"`|"
+echo -e "\nFitxers només a ${CYAN}$DIR2${NC}:\n"
+comm -13 <(find "$DIR1" -type f -printf "%P\n" | sort) <(find "$DIR2" -type f -printf "%P\n" | sort) | sed "s|^|\t `printf "${ARROW}"`|"
 
 # 2.3 Calculate similarity
 calculate_similarity() {
@@ -129,7 +159,7 @@ advanced_comparison() {
     
     # If flag is set and files are not the same, show the differences
     if $show_compare && [[ -n "$diffed" ]]; then
-        echo -e "\nLinies diferents:\n" | sed "s|^|\t|"
+        echo -e "\n${INFO}Linies diferents:\n" | sed "s|^|\t|"
         echo "$diffed" | sed "s|^|\t\t|"
         echo ""
     fi
@@ -137,19 +167,23 @@ advanced_comparison() {
     # Return the absolute path if the similarity is greater than 90%
     if $sim; then
         local similarity=$(calculate_similarity "$file1" "$file2")
-        echo -e ": Els fitxers tenen un $similarity% de similitud.\n" | sed "s|^|\t\t|"
+        echo -e "${INFO}Els fitxers tenen un ${MAGENTA}$similarity%${NC} de similitud\n" | sed "s|^|\t|"
         if [ "$similarity" -ge 90 ]; then
             # Print the absolute path of the files
-            echo "> $(realpath -e "$file1")" | sed "s|^|\t\t|"
-            echo "> $(realpath -e "$file2")" | sed "s|^|\t\t|"
+            echo -e "${ARROW}${BLUE} $(realpath -e "$file1")${NC}" | sed "s|^|\t\t|"
+            echo -e "${ARROW}${BLUE} $(realpath -e "$file2")${NC}\n" | sed "s|^|\t\t|"
         fi
     fi
 
     # Print the result
     if [ -z "$diffed" ]; then
-        echo "* Els fitxers $relpath son iguals." | sed "s|^|\t|"
+        echo -e "${OK}Els fitxers son iguals${NC}" | sed "s|^|\t|"
     else
-        echo "! Els fitxers $relpath son diferents." | sed "s|^|\t|"
+        if $sim && [[ "$similarity" -ge 90 ]]; then 
+            echo -e "${IDK}Els fitxers son molt semblants${NC}" | sed "s|^|\t|"
+        else
+            echo -e "${WARN}Els fitxers son diferents${NC}" | sed "s|^|\t|"
+        fi
     fi
 }
 
@@ -160,13 +194,17 @@ perms_comparison() {
     # Check the permissions of the files
     local perms1=$(stat -c "%a" "$file1")
     local perms2=$(stat -c "%a" "$file2")
+    echo ""
     if [ "$perms1" != "$perms2" ]; then
-        echo -e "! Els permisos son diferents:\n" | sed "s|^|\t|"
-        echo "> "$file1" : $perms1 = $(stat -c "%A" "$file1")" | sed "s|^|\t\t|"
-        echo "> "$file2" : $perms2 = $(stat -c "%A" "$file2")" | sed "s|^|\t\t|"
+        echo -e "${WARN}Els permisos son diferents${NC}\n" | sed "s|^|\t|"
+        echo -e "${ARROW} "$file1"" | sed "s|^|\t\t|"
+        echo -e "${INFO}${YELLOW} $(stat -c "%A" "$file1") ($perms1)${NC}" | sed "s|^|\t\t\t|"
+        echo -e "${ARROW} "$file2"" | sed "s|^|\t\t|"
+        echo -e "${INFO}${YELLOW} $(stat -c "%A" "$file2") ($perms2)${NC}" | sed "s|^|\t\t\t|"
     else
-        echo -e "* Els permisos son iguals:\n" | sed "s|^|\t|"
-        echo "> "$file1" : $perms1 = $(stat -c "%A" "$file1")" | sed "s|^|\t\t|"
+        echo -e "${OK}Els permisos son iguals${NC}\n" | sed "s|^|\t|"
+        echo -e "${ARROW} "$file1"" | sed "s|^|\t\t|"
+        echo -e "${INFO}${YELLOW} $(stat -c "%A" "$file1") ($perms1)${NC}" | sed "s|^|\t\t\t|"
         echo ""
     fi
 }
@@ -176,7 +214,7 @@ perms_comparison() {
 # Convert the comma-separated string into an array
 if [ -n "$ignore_file" ]; then
     IFS=',' read -r -a extensions <<< "$ignore_file"
-    echo -e "\nComparacio avancada de fitxers ignorant (${extensions[@]}):\n"
+    echo -e "\nComparacio avancada de fitxers ignorant (${YELLOW}${extensions[@]}${NC}):\n"
 else
     echo -e "\nComparacio avancada de fitxers:\n"
 fi
@@ -205,16 +243,17 @@ find "$DIR1" -type f -printf "%P\n" | while IFS= read -r relpath; do
         # Compare the files if they are not skipped
         if ! $skip; then 
             echo ""
-            echo -e " || Comparant: $DIR1/$relpath <--> $DIR2/$relpath\n"
+            echo -e " ${NOTE} Comparant: ${CYAN}$DIR1/$relpath ${CMP} ${CYAN}$DIR2/$relpath${NC}\n"
             if ! diff -q "$DIR1/$relpath" "$DIR2/$relpath" >/dev/null; then
                 advanced_comparison "$DIR1/$relpath" "$DIR2/$relpath"
             else
-                echo "* Els fitxers $relpath son iguals." | sed "s|^|\t|"
+                echo -e "${OK}Els fitxers son iguals${NC}" | sed "s|^|\t|"
             fi
-        fi
 
-        if $check_perms; then
-            perms_comparison "$DIR1/$relpath" "$DIR2/$relpath"
+            # Check the permissions of the files
+            if $check_perms; then
+                perms_comparison "$DIR1/$relpath" "$DIR2/$relpath"
+            fi
         fi
     fi
 done
