@@ -124,7 +124,19 @@ secretKey: '123123123'" > dir1/.env
 echo "apiKey: '0987654321'
 secretKey: '123123123'" > dir2/.env
 
+# -------------------
+# Fitxers amb whitespaces
+# -------------------
+echo "Fire ball" > dir1/fireball.astro
+echo "" >> dir1/fireball.astro
+echo "Banana" >> dir1/fireball.astro
+
+echo "Fireball" > dir2/fireball.astro
+echo "" >> dir2/fireball.astro
+echo "Banana" >> dir2/fireball.astro
+
 echo "Fitxers amb diferents extensions creats."
+
 # -------------------
 # Fitxers d'un directory a ignorar
 # -------------------
@@ -154,12 +166,14 @@ while true; do
     echo "    [1] Amb parametres incorrectes (directori inexistent)"
     echo "    [2] Amb parametres correctes (dir1 i dir2)"
     echo "    [3] Amb flag -c (mostrant comparacio de linies)"
-    echo "    [4] Amb flag -f (ignorant .bak i .txt)"
-    echo "    [5] Amb flag -d (ignorant dirX/ignore)"
-    echo "    [6] Amb flag -p (mostrant permisos)"
-    echo "    [7] Amb flag -o (guardant sortida a output.txt)"
-    echo "    [8] Amb tots els flags (-f, -d, -p, -o)"
-    echo "    [9] Sortir"
+    echo "    [4] Amb flag -w (ignorant whitespaces)"
+    echo "    [5] Amb flag -s (calculant similaritat)"
+    echo "    [6] Amb flag -f (ignorant .bak i .txt)"
+    echo "    [7] Amb flag -d (ignorant dirX/ignore)"
+    echo "    [8] Amb flag -p (mostrant permisos)"
+    echo "    [9] Amb flag -o (guardant sortida a register.log)"
+    echo "    [A] Amb tots els flags (-c, -w, -s, -f, -d, -p, -o)"
+    echo "    [X] Sortir"
     echo "-------------------------------------"
     echo "-------------------------------------"
     echo ""
@@ -169,41 +183,64 @@ while true; do
     case $option in
         0)
             echo -e "\nSense parametres"
+            echo "./comparator.sh"
             ./comparator.sh
             ;;
         1)
             echo -e "\nAmb parametres incorrectes"
+            echo "./comparator.sh dir1 inexistent"
             ./comparator.sh dir1 inexistent
             ;;
         2)
             echo -e "\nAmb parametres correctes"
+            echo "./comparator.sh dir1 dir2"
             ./comparator.sh dir1 dir2
             ;;
         3)
             echo -e "\nAmb flag -c (mostrant comparacio de linies)"
+            echo "./comparator.sh -c dir1 dir2"
             ./comparator.sh -c dir1 dir2
             ;;
         4)
-            echo -e "\nAmb flag -f (ignorant .bak i .txt)"
-            ./comparator.sh -f .bak,.txt dir1 dir2
+            echo -e "\nAmb flag -w (ignorant whitespaces)"
+            echo -e "\nIgnorant tots els fitxers menys el de prova de whitespaces"
+            echo "./comparator.sh -w -c -f .txt,.log,.bak,.tmp,.conf,.lua,.py,.osr,.js,.sh,.json,.env,.css dir1 dir2"
+            ./comparator.sh -w -c -f .txt,.log,.bak,.tmp,.conf,.lua,.py,.osr,.js,.sh,.json,.env,.css dir1 dir2
+            echo -e "\nSense flag -w (comparant whitespaces)"
+            echo "./comparator.sh -c -f .txt,.log,.bak,.tmp,.conf,.lua,.py,.osr,.js,.sh,.json,.env,.css dir1 dir2"
+            ./comparator.sh -c -f .txt,.log,.bak,.tmp,.conf,.lua,.py,.osr,.js,.sh,.json,.env,.css dir1 dir2
             ;;
         5)
-            echo -e "\nAmb flag -d (ignorant dirX/ignore)"
-            ./comparator.sh -d ignore dir1 dir2
+            echo -e "\nAmb flag -s (calculant similaritat)"
+            echo "./comparator.sh -s dir1 dir2"
+            ./comparator.sh -s dir1 dir2
             ;;
         6)
-            echo -e "\nAmb flag -p (mostrant permisos)"
-            ./comparator.sh -p dir1 dir2
+            echo -e "\nAmb flag -f (ignorant .bak i .txt)"
+            echo "./comparator.sh -f .bak,.txt dir1 dir2"
+            ./comparator.sh -f .bak,.txt dir1 dir2
             ;;
         7)
-            echo -e "\nAmb flag -o (guardant sortida a output.log)"
-            ./comparator.sh -o output.log dir1 dir2
+            echo -e "\nAmb flag -d (ignorant dirX/ignore)"
+            echo "./comparator.sh -d ignore dir1 dir2"
+            ./comparator.sh -d ignore dir1 dir2
             ;;
         8)
-            echo -e "\nAmb tots els flags (-c, -f, -d, -p, -o)"
-            ./comparator.sh -c -f .bak,.txt -d ignore -p -o output.log dir1 dir2
+            echo -e "\nAmb flag -p (mostrant permisos)"
+            echo "./comparator.sh -p dir1 dir2"
+            ./comparator.sh -p dir1 dir2
             ;;
         9)
+            echo -e "\nAmb flag -o (guardant sortida a register.log)"
+            echo "./comparator.sh -o register.log dir1 dir2"
+            ./comparator.sh -o register.log dir1 dir2
+            ;;
+        A)
+            echo -e "\nAmb tots els flags (-c, -w, -s, -f, -d, -p, -o)"
+            echo "./comparator.sh -c -w -s -f .bak,.txt -d ignore -p -o output.log dir1 dir2"
+            ./comparator.sh -c -f .bak,.txt -d ignore -p -o output.log dir1 dir2
+            ;;
+        X)
             break
             ;;
         *)
